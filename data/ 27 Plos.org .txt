@@ -1,0 +1,2 @@
+"x"
+"1" "A cost/benefit analysis of clinical trial designs for COVID-19 vaccine candidates We compare and contrast the expected duration and number of infections and deaths averted among several designs for clinical trials of COVID-19 vaccine candidates, including traditional and adaptive randomized clinical trials and human challenge trials. Using…"
