@@ -1,0 +1,2 @@
+"x"
+"1" "T cell and antibody responses induced by a single dose of ChAdOx1 nCoV-19 (AZD1222) vaccine in a phase 1/2 clinical trial A single dose of the ChAdOx1 nCoV-19 vaccine elicits antibodies and cytokine-producing T cells that might help control or prevent SARS-CoV-2 infection."

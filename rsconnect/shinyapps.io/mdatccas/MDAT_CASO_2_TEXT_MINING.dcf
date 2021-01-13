@@ -1,0 +1,12 @@
+name: MDAT_CASO_2_TEXT_MINING
+title: MDAT_CASO_2_TEXT_MINING
+username:
+account: mdatccas
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3467106
+bundleId: 4088697
+url: https://mdatccas.shinyapps.io/MDAT_CASO_2_TEXT_MINING/
+when: 1610498106.00793
+asMultiple: FALSE
+asStatic: FALSE

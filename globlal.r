@@ -19,6 +19,8 @@ library("easypackages")
 libraries(load.lib)
 
 
+
+
 ## Finaliza instalación y carga de librerias
 ##################################################################
 
@@ -79,6 +81,7 @@ docsList <- c(seq(1,86, by=1))
 
 text <- Corpus(DirSource("data/",encoding="UTF-8" ), 
                readerControl = list(reader = readPlain, language = "english"))
+
 ## text
 
 ## Funcion elimina brackets
@@ -105,20 +108,20 @@ fn_text_clean <- function(corpus_txt)
     corpus_txt[[i]]$content <-gsub("[^a-zA-Z0-9]","  ", corpus_txt[[i]]$content)
   }
   
-  # Remove stop word using tm package
+  # remover stop word usando tm 
   corpus_txt <- tm_map(corpus_txt, removeWords, stopwords('english'))
   
-  # change tolower words
+  # cambiar a minusculas las palabras
   corpus_txt <- tm_map(corpus_txt, content_transformer(tolower))
   
-  # remove numbers
+  # remover numero
   corpus_txt <- tm_map(corpus_txt, removeNumbers)
-  # custom stop words
+  # stop words personalizadas
   stopwords_C <- read.csv("dic/stop-word-list.csv", header = FALSE)
   stopwords_C <- as.character(stopwords_C$V1)
-  #remove custome stop words
+  #remover stop words personañizadas
   corpus_txt <- tm_map(corpus_txt, removeWords, stopwords_C) 
-  #remove extra white spaces
+  #remove espacios en blano extras
   corpus_txt <- tm_map(corpus_txt, stripWhitespace)
   
   return(corpus_txt)
@@ -141,26 +144,23 @@ steam_lema <-
 
 
 
-text[[1]]$content
 
 
 textCln<-fn_text_clean(text)
-textCln[[1]]$content
 
 
 textLemaSte<-steam_lema(textCln)
 
-text[[1]]$content
 
-textCln[[1]]$content
-
-textLemaSte[[1]]$content
-
+## Matriz Termino Documento
 
 tdm <- TermDocumentMatrix(textLemaSte)
 
+## Matriz Documento Termino
+
 dtm <- DocumentTermMatrix(textLemaSte)
 
+## Remocion terminos
 dtm <- removeSparseTerms(dtm , 0.990)
 
 sel_idx <- slam::row_sums(dtm) > 0
@@ -220,13 +220,14 @@ topicNames <- apply(terms(topicModel, 10), 2, paste, collapse = " ")
 
 topicModel2 <- tidy(topicModel,matrix = "beta")
 
-top_terms_5 <- topicModel2 %>%
+## topicos palabras
+top_terms_10 <- topicModel2 %>%
   group_by(topic) %>%
-  top_n(15,beta) %>% 
+  top_n(10,beta) %>% 
   ungroup() %>%
   arrange(topic,-beta)
 
-plot_topic_5 <- top_terms_5 %>%
+plot_topic_10 <- top_terms_10 %>%
   mutate(term = reorder_within(term, beta, topic)) %>%
   ggplot(aes(term, beta, fill = factor(topic))) +
   geom_col(show.legend = FALSE) +
@@ -234,22 +235,30 @@ plot_topic_5 <- top_terms_5 %>%
   coord_flip() +
   scale_x_reordered()
 
-plot_topic_5
-
-# mod_lda_5$top_terms <- GetTopTerms(phi = mod_lda_5$phi,M = 15)
-# data.frame(mod_lda_5$top_terms)
 
 
-# 
-# 
-# topicProportionExamples <- theta[exampleIds,]
-# colnames(topicProportionExamples) <- topicNames
-# vizDataFrame <- melt(cbind(data.frame(topicProportionExamples), document = factor(1:N)), variable.name = "topic", id.vars = "document")  
-# ggplot(data = vizDataFrame, aes(topic, value, fill = document), ylab = "proportion") + 
-#   geom_bar(stat="identity") +
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  
-#   coord_flip() +
-#   facet_wrap(~ document, ncol = N)
+#plot_topic_5
+
+## tpicos documentos
+exampleIds <- c(1,6,85)
+
+tmResult <- posterior(topicModel)
+theta <- tmResult$topics
+beta <- tmResult$terms
+
+topicProportionExamples <- theta[exampleIds,]
+colnames(topicProportionExamples) <- topicNames
+vizDataFrame <- melt(cbind(data.frame(topicProportionExamples), document = factor(exampleIds)), variable.name = "topic", id.vars = "document")  
+
+
+
+ggplot(data = vizDataFrame, aes(topic, value, fill = document), ylab = "proportion") + 
+  geom_bar(stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  
+  coord_flip() +
+  facet_wrap(~ document, ncol = length(exampleIds))
+
+
 
 
 

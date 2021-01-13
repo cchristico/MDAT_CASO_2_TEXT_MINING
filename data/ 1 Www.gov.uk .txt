@@ -1,0 +1,2 @@
+"x"
+"1" "Guidance: National protocol for COVID-19 Vaccine AstraZeneca (ChAdOx1-S [recombinant]) This protocol is for the administration of COVID-19 Vaccine AstraZeneca (ChAdOx1-S [recombinant]) to individuals in accordance with the national COVID-19 vaccination programme."

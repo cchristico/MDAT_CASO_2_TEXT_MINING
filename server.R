@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
         barplot(d[1:input$words,]$freq, las = 2, names.arg = d[1:input$words,]$word,
                 col = pal,
                 #c("#E69F00", "#56B4E9", "#009E73")
-                main ="Top 10 Palabras mas Frecuentes",
+                main ="Top Palabras mas Frecuentes",
                 ylab = "Frecuencia de Palabras")
 
     })
@@ -60,6 +60,35 @@ shinyServer(function(input, output) {
     
     output$topicNum <- renderPlot({
     FindTopicsNumber_plot(result)
+    })
+    
+    
+     output$Topics<-renderPlot({plot_topic_10})
+    
+    output$docTopic<-renderPlotly({
+        
+        docsExaple <- strtoi(input$docs)
+         topicProportionExamples <- theta[docsExaple,]
+         colnames(topicProportionExamples) <- topicNames
+         vizDataFrame <- melt(cbind(data.frame(topicProportionExamples), document = factor(docsExaple)), variable.name = "topic", id.vars = "document")
+
+            gPlot <- ggplot(data = vizDataFrame, aes(topic, value, fill = document), ylab = "proportion") +
+             geom_bar(stat="identity") +
+             theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+             coord_flip() +
+             facet_wrap(~ document, ncol = length(docsExaple))
+
+        
+    })
+    output$tblTopics<-renderDataTable({
+        
+        docsExaple <- strtoi(input$docs)
+        topicProportionExamples <- theta[docsExaple,]
+        colnames(topicProportionExamples) <- topicNames
+        vizDataFrame <- melt(cbind(data.frame(topicProportionExamples), document = factor(docsExaple)), variable.name = "topic", id.vars = "document")
+        vizDataFrame <- vizDataFrame[order(-vizDataFrame$value),]
+        vizDataFrame
+        
     })
 
 })
